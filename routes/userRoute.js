@@ -52,7 +52,32 @@ const userRoute = (app) => {//app como dependencia
         res.status(201).send('OK')//Retorna um status HTTP 201 (Created) como resposta à requisição POST e envia a mensagem 'OK'.
 
     })
-    
+    .put((req,res) => {
+       // Obtém a lista de usuários do banco de dados
+        const users = getUsers()
+
+        //Utiliza o método map para percorrer cada usuário na lista e criar uma nova lista de usuários atualizados.
+        // Salva os usuários atualizados no banco de dados
+        saveUser(users.map(user => {
+            
+         // Verifica se o ID do usuário na iteração é igual ao ID da requisição  
+           if(user.id == req.params.id){
+             // Se for igual, atualiza as propriedades do usuário com os dados da requisição
+            return {  
+
+                //O operador spread (...) em JavaScript é frequentemente usado para criar cópias de arrays ou objetos, bem como para combinar vários arrays ou objetos.
+
+                ...user,// O operador spread (...) é utilizado para copiar todas as propriedades do usuário
+                ...req.body//// Substitui ou adiciona propriedades do usuário com os dados da requisição
+            }
+           }
+            // Se o ID não corresponder, mantém o usuário inalterado
+           return user
+        }))
+          // Retorna um status HTTP 200 (OK) e uma mensagem de sucesso
+        res.status(200).send('OK')
+    })
+
 }
 
 module.exports = userRoute
