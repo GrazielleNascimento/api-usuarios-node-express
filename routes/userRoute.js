@@ -43,7 +43,16 @@ const userRoute = (app) => {//app como dependencia
 
         res.send({ users })// retorna os usuarios como resposta à requisição. Os usuários são enviados como um objeto JSON.
     })
-   
+    .post((req, res) => { // Este trecho define o que acontecerá quando houver uma requisição HTTP POST para a rota /users/:id?.
+        const users = getUsers()// Obtém os usuários chamando a função getUsers.
+
+        users.push(req.body)//: Adiciona o corpo da requisição (presumivelmente um novo usuário) ao array de usuários.
+        saveUser(users)//: Salva o array atualizado de usuários chamando a função saveUser.
+
+        res.status(201).send('OK')//Retorna um status HTTP 201 (Created) como resposta à requisição POST e envia a mensagem 'OK'.
+
+    })
+    
 }
 
 module.exports = userRoute
